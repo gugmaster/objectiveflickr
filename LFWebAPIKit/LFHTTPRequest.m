@@ -58,7 +58,6 @@ void LFHRReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType even
 
 @interface LFHTTPRequest (PrivateMethods)
 - (void)cleanUp;
-- (void)dealloc;
 - (void)handleTimeout;
 - (void)handleRequestMessageBodyTrackerTick:(NSTimer *)timer;
 - (void)handleReceivedDataTrackerTick:(NSTimer *)timer;
@@ -99,21 +98,7 @@ void LFHRReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType even
     _lastSentBytes = 0;
 
 }
-- (void)dealloc
-{
-    [self cleanUp];
-    [_userAgent release];
-    [_contentType release];
-    [_requestHeader release];
-    [_receivedData release];
-    [_receivedContentType release];
 
-    [_sessionInfo release];
-    _sessionInfo = nil;
-
-    free(_readBuffer);
-    [super dealloc];
-}
 
 - (void)finalize
 {
@@ -420,6 +405,22 @@ void LFHRReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType even
     }
 
     return self;
+}
+
+- (void)dealloc
+{
+	[self cleanUp];
+	[_userAgent release];
+	[_contentType release];
+	[_requestHeader release];
+	[_receivedData release];
+	[_receivedContentType release];
+	
+	[_sessionInfo release];
+	_sessionInfo = nil;
+	
+	free(_readBuffer);
+	[super dealloc];
 }
 
 - (BOOL)isRunning
